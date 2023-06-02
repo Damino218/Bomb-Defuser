@@ -1,14 +1,14 @@
 const center = document.querySelector(".center");
 const bottom = document.querySelector(".bottom");
-let wynik = 0;
+const gameScore = document.querySelector(".score");
 let random = 0;
+let score = 0;
 
 function startGame() {
   const startSound = new Audio("bombPlanted.wav");
   startSound.play();
-  center.innerHTML = "";
-  //randomizer();
-  punkty();
+  randomizer();
+  updateScore();
 }
 
 function credits() {
@@ -24,10 +24,8 @@ function credits() {
   center.appendChild(button);
 }
 
-function punkty() {
-  const div = document.createElement("div");
-  bottom.appendChild(div);
-  div.innerHTML = "Score: " + wynik;
+function updateScore() {
+  gameScore.innerText = `Score: ${score}`;
 }
 
 function randomizer() {
@@ -43,5 +41,82 @@ function randomizer() {
     case 3:
       game3();
       break;
+  }
+}
+
+function gameWin() {
+  const winSound = new Audio("bombDefused.wav");
+  winSound.play();
+  score++;
+  updateScore();
+  setTimeout(() => {
+    center.innerHTML = "";
+    randomizer();
+  }, 6000)
+}
+
+function game1() {
+  let bombCode = generateBombCode();
+  console.log("Kod bomby: " + bombCode);
+  let attempts = 0;
+
+  const codeInput = document.createElement("input");
+  codeInput.type = "text";
+  codeInput.placeholder = "Podaj kod dezaktywacyjny";
+  const submitButton = document.createElement("button");
+  submitButton.innerText = "Dezaktywuj";
+  const hint = document.createElement("p");
+
+  submitButton.addEventListener("click", function () {
+    const enteredCode = codeInput.value;
+    attempts++;
+
+    if (enteredCode === bombCode) {
+      showResultMessage("Bomba została dezaktywowana! Udane rozbrojenie!", true);
+      gameWin();
+    } else {
+      if (attempts >= 3) {
+        showResultMessage("Niepoprawny kod! Bomba eksploduje! Game over!", false);
+      } else {
+        const enteredCodeArray = enteredCode.split('');
+        const bombCodeArray = bombCode.split('');
+
+        let hintMessage = "Niepoprawny kod! Spróbuj jeszcze raz. Pozostało ci " + (3 - attempts) + " prób.";
+
+        for (let i = 0; i < enteredCodeArray.length; i++) {
+          if (enteredCodeArray[i] === bombCodeArray[i]) {
+            hintMessage += " Cyfra na pozycji " + (i + 1) + " jest poprawna.";
+          }
+        }
+
+        showResultMessage(hintMessage, false);
+      }
+    }
+  });
+
+  center.innerHTML = "";
+  center.appendChild(codeInput);
+  center.appendChild(submitButton);
+  center.appendChild(hint);
+
+  function generateBombCode() {
+    const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    let code = '';
+    for (let i = 0; i < 4; i++) {
+      const randomIndex = Math.floor(Math.random() * digits.length);
+      code += digits[randomIndex];
+    }
+    return code;
+  }
+
+  function showResultMessage(message, isSuccess) {
+    const resultMessage = document.createElement("p");
+    resultMessage.innerText = message;
+    if (isSuccess) {
+      resultMessage.classList.add("success");
+    } else {
+      resultMessage.classList.add("failure");
+    }
+    center.appendChild(resultMessage);
   }
 }
