@@ -63,14 +63,19 @@ function gameWin() {
 }
 
 function gameLost() {
-  const lostSound = new Audio("bombDefused.wav");
-  lostSound.play();
   mainAttempts--
   updateMainAttempts()
-  setTimeout(() => {
-    center.innerHTML = "";
-    randomizer();
-  }, 6000)
+  if (mainAttempts = 4) {
+    center.innerHTML= ""
+  }
+  else{
+    const lostSound = new Audio("bombDefused.wav");
+    lostSound.play();
+    setTimeout(() => {
+      center.innerHTML = "";
+      randomizer();
+    }, 6000)
+  }
 }
 
 function game1() {
