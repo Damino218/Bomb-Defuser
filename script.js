@@ -65,8 +65,17 @@ function gameWin() {
 function gameLost() {
   mainAttempts--
   updateMainAttempts()
-  if (mainAttempts = 4) {
-    center.innerHTML= ""
+  if (mainAttempts = 0) {
+    center.innerHTML = `Game Over! Your's Score: ${score}`;
+    const button = document.createElement("button");
+    button.className = "buttons";
+    center.appendChild(button);
+    button.innerText = "Reset"
+    button.onclick = () => {
+      setTimeout(() => {
+        window.location.reload();
+      }, 5);
+    };
   }
   else{
     const lostSound = new Audio("bombDefused.wav");
