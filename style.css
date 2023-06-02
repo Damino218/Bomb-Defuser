@@ -27,6 +27,8 @@ body {
 .center {
   text-align: center;
   margin-bottom: 20px;
+  color: #333;
+  font-size: 25px;
 }
 
 .buttons {
@@ -48,8 +50,8 @@ body {
 .bottom {
   background-color: #333;
   color: #fff;
-  text-align: center;
   padding: 15px;
+  text-align: center;
 }
 
 /*styles for games*/

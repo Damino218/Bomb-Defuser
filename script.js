@@ -1,14 +1,17 @@
 const center = document.querySelector(".center");
 const bottom = document.querySelector(".bottom");
 const gameScore = document.querySelector(".score");
+const attempts = document.querySelector(".mainAttempts");
 let random = 0;
 let score = 0;
+let mainAttempts = 5;
 
 function startGame() {
   const startSound = new Audio("bombPlanted.wav");
   startSound.play();
   randomizer();
   updateScore();
+  updateMainAttempts();
 }
 
 function credits() {
@@ -26,6 +29,10 @@ function credits() {
 
 function updateScore() {
   gameScore.innerText = `Score: ${score}`;
+}
+
+function updateMainAttempts() {
+  attempts.innerText = `Main Attempts: ${mainAttempts}`;
 }
 
 function randomizer() {
@@ -47,8 +54,19 @@ function randomizer() {
 function gameWin() {
   const winSound = new Audio("bombDefused.wav");
   winSound.play();
-  score++;
+  score = score + 500;
   updateScore();
+  setTimeout(() => {
+    center.innerHTML = "";
+    randomizer();
+  }, 6000)
+}
+
+function gameLost() {
+  const lostSound = new Audio("bombDefused.wav");
+  lostSound.play();
+  mainAttempts--
+  updateMainAttempts()
   setTimeout(() => {
     center.innerHTML = "";
     randomizer();
@@ -77,6 +95,7 @@ function game1() {
     } else {
       if (attempts >= 3) {
         showResultMessage("Niepoprawny kod! Bomba eksploduje! Game over!", false);
+        gameLost()
       } else {
         const enteredCodeArray = enteredCode.split('');
         const bombCodeArray = bombCode.split('');
