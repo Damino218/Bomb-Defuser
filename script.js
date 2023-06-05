@@ -59,32 +59,31 @@ function gameWin() {
   setTimeout(() => {
     center.innerHTML = "";
     randomizer();
-  }, 6000)
+  }, 6000);
 }
 
 function gameLost() {
-  mainAttempts --;
-  updateMainAttempts()
+  mainAttempts--;
+  updateMainAttempts();
   updateScore();
   if (mainAttempts <= 0) {
     center.innerHTML = `Game Over! Your's Score: ${score}`;
     const button = document.createElement("button");
     button.className = "buttons";
     center.appendChild(button);
-    button.innerText = "Reset"
+    button.innerText = "Reset";
     button.onclick = () => {
       setTimeout(() => {
         window.location.reload();
       }, 5);
     };
-  }
-  else{
+  } else {
     const lostSound = new Audio("bombExplode.wav");
     lostSound.play();
     setTimeout(() => {
       center.innerHTML = "";
       randomizer();
-    }, 6000)
+    }, 6000);
   }
 }
 
@@ -93,9 +92,9 @@ function game1() {
   console.log("Bomb Code: " + bombCode);
   let attempts = 0;
 
-  const text = document.createElement("div")
-  text.innerHTML = "Enter deactivation code:"
-  text.className = "text"
+  const text = document.createElement("div");
+  text.innerHTML = "Enter deactivation code:";
+  text.className = "text";
   const codeInput = document.createElement("input");
   codeInput.type = "number";
   codeInput.className = "codeInput";
@@ -114,12 +113,15 @@ function game1() {
     } else {
       if (attempts >= 3) {
         showResultMessage("Bomb exploded! :(", false);
-        gameLost()
+        gameLost();
       } else {
-        const enteredCodeArray = enteredCode.split('');
-        const bombCodeArray = bombCode.split('');
+        const enteredCodeArray = enteredCode.split("");
+        const bombCodeArray = bombCode.split("");
 
-        let hintMessage = "Incorrect code! Try again. Remaining attempts: " + (3 - attempts) + " prób.";
+        let hintMessage =
+          "Incorrect code! Try again. Remaining attempts: " +
+          (3 - attempts) +
+          " prób.";
 
         for (let i = 0; i < enteredCodeArray.length; i++) {
           if (enteredCodeArray[i] === bombCodeArray[i]) {
@@ -139,8 +141,8 @@ function game1() {
   center.appendChild(hint);
 
   function generateBombCode() {
-    const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
-    let code = '';
+    const digits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+    let code = "";
     for (let i = 0; i < 4; i++) {
       const randomIndex = Math.floor(Math.random() * digits.length);
       code += digits[randomIndex];
@@ -161,7 +163,7 @@ function game1() {
 }
 
 function game2() {
-  const colors = ['red', 'green', 'blue', 'yellow'];
+  const colors = ["red", "green", "blue", "yellow"];
   const bombColor = generateBombColor();
   console.log("Cable color: " + bombColor);
   let attempts = 0;
@@ -188,7 +190,12 @@ function game2() {
           showResultMessage("Bomb exploded! :(", false);
           gameLost();
         } else {
-          showResultMessage("Incorrect cable! Try again. Remaining attempts: " + (2 - attempts) + ".", false);
+          showResultMessage(
+            "Incorrect cable! Try again. Remaining attempts: " +
+              (2 - attempts) +
+              ".",
+            false
+          );
         }
       }
     });
@@ -197,7 +204,7 @@ function game2() {
   }
 
   const hint = document.createElement("p");
-  
+
   center.innerHTML = "";
   center.appendChild(text);
   center.appendChild(wiresContainer);
@@ -221,8 +228,8 @@ function game2() {
 }
 
 function game3() {
-  let board = ['', '', '', '', '', '', '', '', ''];
-  let currentPlayer = 'O';
+  let board = ["", "", "", "", "", "", "", "", ""];
+  let currentPlayer = "O";
   let gameOver = false;
 
   const text = document.createElement("div");
@@ -236,7 +243,7 @@ function game3() {
     const cell = document.createElement("div");
     cell.className = "cell";
     cell.addEventListener("click", function () {
-      if (!gameOver && board[i] === '') {
+      if (!gameOver && board[i] === "") {
         makeMove(i);
         if (!checkWin() && !checkDraw()) {
           computerMove();
@@ -258,13 +265,13 @@ function game3() {
     const cell = boardContainer.children[index];
     cell.innerText = currentPlayer;
     cell.classList.add(currentPlayer);
-    currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+    currentPlayer = currentPlayer === "X" ? "O" : "X";
   }
 
   function computerMove() {
     let availableMoves = [];
     for (let i = 0; i < board.length; i++) {
-      if (board[i] === '') {
+      if (board[i] === "") {
         availableMoves.push(i);
       }
     }
@@ -274,16 +281,21 @@ function game3() {
 
   function checkWin() {
     const winningConditions = [
-      [0, 1, 2], [3, 4, 5], [6, 7, 8],
-      [0, 3, 6], [1, 4, 7], [2, 5, 8],
-      [0, 4, 8], [2, 4, 6]
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
     ];
 
     for (let i = 0; i < winningConditions.length; i++) {
       const [a, b, c] = winningConditions[i];
-      if (board[a] !== '' && board[a] === board[b] && board[a] === board[c]) {
+      if (board[a] !== "" && board[a] === board[b] && board[a] === board[c]) {
         highlightWinningCells([a, b, c]);
-        if (currentPlayer === 'O') {
+        if (currentPlayer === "O") {
           showResultMessage("Bomb exploded! :(", false);
           gameLost();
         } else {
@@ -299,11 +311,11 @@ function game3() {
   }
 
   function checkDraw() {
-    if (!board.includes('')) {
+    if (!board.includes("")) {
       showResultMessage("Draw!", false);
       setTimeout(() => {
         randomizer();
-      }, 6000)
+      }, 6000);
       gameOver = true;
       return true;
     }
