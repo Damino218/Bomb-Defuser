@@ -26,7 +26,7 @@ body {
 
 .center {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 0px;
   color: #333;
   font-size: 25px;
 }
@@ -56,3 +56,40 @@ body {
 
 /*styles for games*/
 
+.text {
+  margin: 0 auto 10px;
+  text-align: center;
+}
+
+.codeInput {
+  text-align: center;
+  padding: 12px 24px;
+  width: 150px;
+  height: 12px;
+  margin: 0 auto 10px;
+  font-size: 20px;
+}
+
+.success {
+  color:#45a049;
+}
+
+.failure {
+  color: red;
+}
+
+.wiresContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.wire {
+  width: 80px;
+  height: 30px;
+  margin-bottom: 10px;
+  cursor: pointer;
+}

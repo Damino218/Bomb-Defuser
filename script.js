@@ -36,8 +36,8 @@ function updateMainAttempts() {
 }
 
 function randomizer() {
-  let random = Math.floor(Math.random() * 1) + 1;
-  console.log(random);
+  let random = Math.floor(Math.random() * 1) + 2;
+  console.log("Game selected: " + random);
   switch (random) {
     case 1:
       game1();
@@ -63,9 +63,9 @@ function gameWin() {
 }
 
 function gameLost() {
-  mainAttempts--
+  mainAttempts --;
   updateMainAttempts()
-  if (mainAttempts = 0) {
+  if (mainAttempts <= 0) {
     center.innerHTML = `Game Over! Your's Score: ${score}`;
     const button = document.createElement("button");
     button.className = "buttons";
@@ -78,7 +78,7 @@ function gameLost() {
     };
   }
   else{
-    const lostSound = new Audio("bombDefused.wav");
+    const lostSound = new Audio("bombExplode.wav");
     lostSound.play();
     setTimeout(() => {
       center.innerHTML = "";
@@ -89,14 +89,18 @@ function gameLost() {
 
 function game1() {
   let bombCode = generateBombCode();
-  console.log("Kod bomby: " + bombCode);
+  console.log("Bomb Code: " + bombCode);
   let attempts = 0;
 
+  const text = document.createElement("div")
+  text.innerHTML = "Enter deactivation code:"
+  text.className = "text"
   const codeInput = document.createElement("input");
-  codeInput.type = "text";
-  codeInput.placeholder = "Podaj kod dezaktywacyjny";
+  codeInput.type = "number";
+  codeInput.className = "codeInput";
   const submitButton = document.createElement("button");
-  submitButton.innerText = "Dezaktywuj";
+  submitButton.innerText = "Defuse";
+  submitButton.className = "buttons";
   const hint = document.createElement("p");
 
   submitButton.addEventListener("click", function () {
@@ -104,21 +108,21 @@ function game1() {
     attempts++;
 
     if (enteredCode === bombCode) {
-      showResultMessage("Bomba została dezaktywowana! Udane rozbrojenie!", true);
+      showResultMessage("Bomb has been defused! Good Job. :)", true);
       gameWin();
     } else {
       if (attempts >= 3) {
-        showResultMessage("Niepoprawny kod! Bomba eksploduje! Game over!", false);
+        showResultMessage("Bomb exploded! :(", false);
         gameLost()
       } else {
         const enteredCodeArray = enteredCode.split('');
         const bombCodeArray = bombCode.split('');
 
-        let hintMessage = "Niepoprawny kod! Spróbuj jeszcze raz. Pozostało ci " + (3 - attempts) + " prób.";
+        let hintMessage = "Incorrect code! Try again. Remaining attempts: " + (3 - attempts) + " prób.";
 
         for (let i = 0; i < enteredCodeArray.length; i++) {
           if (enteredCodeArray[i] === bombCodeArray[i]) {
-            hintMessage += " Cyfra na pozycji " + (i + 1) + " jest poprawna.";
+            hintMessage += "Number on position: " + (i + 1) + " is correct.";
           }
         }
 
@@ -128,6 +132,7 @@ function game1() {
   });
 
   center.innerHTML = "";
+  center.appendChild(text);
   center.appendChild(codeInput);
   center.appendChild(submitButton);
   center.appendChild(hint);
@@ -140,6 +145,66 @@ function game1() {
       code += digits[randomIndex];
     }
     return code;
+  }
+
+  function showResultMessage(message, isSuccess) {
+    const resultMessage = document.createElement("p");
+    resultMessage.innerText = message;
+    if (isSuccess) {
+      resultMessage.classList.add("success");
+    } else {
+      resultMessage.classList.add("failure");
+    }
+    center.appendChild(resultMessage);
+  }
+}
+
+function game2() {
+  const colors = ['red', 'green', 'blue', 'yellow'];
+  const bombColor = generateBombColor();
+  console.log("Cable color: " + bombColor);
+  let attempts = 0;
+
+  const text = document.createElement("div");
+  text.innerHTML = "Cut the correct wire:";
+  text.className = "text";
+
+  const wiresContainer = document.createElement("div");
+  wiresContainer.className = "wiresContainer";
+
+  for (let i = 0; i < colors.length; i++) {
+    const wire = document.createElement("div");
+    wire.className = "wire";
+    wire.style.backgroundColor = colors[i];
+    wire.addEventListener("click", function () {
+      attempts++;
+      const selectedColor = colors[i];
+      if (selectedColor === bombColor) {
+        showResultMessage("Bomb has been defused! Good Job. :)", true);
+        gameWin();
+      } else {
+        if (attempts >= 2) {
+          showResultMessage("Bomb exploded! :(", false);
+          gameLost();
+        } else {
+          showResultMessage("Incorrect cable! Try again. Remaining attempts: " + (2 - attempts) + ".", false);
+        }
+      }
+    });
+
+    wiresContainer.appendChild(wire);
+  }
+
+  const hint = document.createElement("p");
+  
+  center.innerHTML = "";
+  center.appendChild(text);
+  center.appendChild(wiresContainer);
+  center.appendChild(hint);
+
+  function generateBombColor() {
+    const randomIndex = Math.floor(Math.random() * colors.length);
+    return colors[randomIndex];
   }
 
   function showResultMessage(message, isSuccess) {
