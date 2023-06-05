@@ -36,7 +36,7 @@ function updateMainAttempts() {
 }
 
 function randomizer() {
-  let random = Math.floor(Math.random() * 1) + 2;
+  let random = Math.floor(Math.random() * 3) + 1;
   console.log("Game selected: " + random);
   switch (random) {
     case 1:
@@ -65,6 +65,7 @@ function gameWin() {
 function gameLost() {
   mainAttempts --;
   updateMainAttempts()
+  updateScore();
   if (mainAttempts <= 0) {
     center.innerHTML = `Game Over! Your's Score: ${score}`;
     const button = document.createElement("button");
@@ -210,6 +211,117 @@ function game2() {
   function showResultMessage(message, isSuccess) {
     const resultMessage = document.createElement("p");
     resultMessage.innerText = message;
+    if (isSuccess) {
+      resultMessage.classList.add("success");
+    } else {
+      resultMessage.classList.add("failure");
+    }
+    center.appendChild(resultMessage);
+  }
+}
+
+function game3() {
+  let board = ['', '', '', '', '', '', '', '', ''];
+  let currentPlayer = 'O';
+  let gameOver = false;
+
+  const text = document.createElement("div");
+  text.innerHTML = "Tic Tac Toe";
+  text.className = "text";
+
+  const boardContainer = document.createElement("div");
+  boardContainer.className = "boardContainer";
+
+  for (let i = 0; i < 9; i++) {
+    const cell = document.createElement("div");
+    cell.className = "cell";
+    cell.addEventListener("click", function () {
+      if (!gameOver && board[i] === '') {
+        makeMove(i);
+        if (!checkWin() && !checkDraw()) {
+          computerMove();
+          checkWin();
+          checkDraw();
+        }
+      }
+    });
+
+    boardContainer.appendChild(cell);
+  }
+
+  center.innerHTML = "";
+  center.appendChild(text);
+  center.appendChild(boardContainer);
+
+  function makeMove(index) {
+    board[index] = currentPlayer;
+    const cell = boardContainer.children[index];
+    cell.innerText = currentPlayer;
+    cell.classList.add(currentPlayer);
+    currentPlayer = (currentPlayer === 'X') ? 'O' : 'X';
+  }
+
+  function computerMove() {
+    let availableMoves = [];
+    for (let i = 0; i < board.length; i++) {
+      if (board[i] === '') {
+        availableMoves.push(i);
+      }
+    }
+    const randomIndex = Math.floor(Math.random() * availableMoves.length);
+    makeMove(availableMoves[randomIndex]);
+  }
+
+  function checkWin() {
+    const winningConditions = [
+      [0, 1, 2], [3, 4, 5], [6, 7, 8],
+      [0, 3, 6], [1, 4, 7], [2, 5, 8],
+      [0, 4, 8], [2, 4, 6]
+    ];
+
+    for (let i = 0; i < winningConditions.length; i++) {
+      const [a, b, c] = winningConditions[i];
+      if (board[a] !== '' && board[a] === board[b] && board[a] === board[c]) {
+        highlightWinningCells([a, b, c]);
+        if (currentPlayer === 'O') {
+          showResultMessage("Bomb exploded! :(", false);
+          gameLost();
+        } else {
+          showResultMessage("Bomb has been defused! Good Job. :)", true);
+          gameWin();
+        }
+        gameOver = true;
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function checkDraw() {
+    if (!board.includes('')) {
+      showResultMessage("Draw!", false);
+      setTimeout(() => {
+        randomizer();
+      }, 6000)
+      gameOver = true;
+      return true;
+    }
+
+    return false;
+  }
+
+  function highlightWinningCells(cells) {
+    for (let i = 0; i < cells.length; i++) {
+      const cell = boardContainer.children[cells[i]];
+      cell.classList.add("winningCell");
+    }
+  }
+
+  function showResultMessage(message, isSuccess) {
+    const resultMessage = document.createElement("p");
+    resultMessage.innerText = message;
+    resultMessage.className = "resultMessage";
     if (isSuccess) {
       resultMessage.classList.add("success");
     } else {
