@@ -91,7 +91,21 @@ function game1() {
   let bombCode = generateBombCode();
   console.log("Bomb Code: " + bombCode);
   let attempts = 0;
+  let shift = Math.floor(Math.random() * 5) + 1;
 
+  let encryptedBombCode = "";
+  for (let i = 0; i < bombCode.length; i++) {
+    let digit = parseInt(bombCode[i]);
+    digit = (digit + shift) % 10;
+    encryptedBombCode += digit;
+  }
+
+  const encryptedCode = document.createElement("div");
+  encryptedCode.innerHTML = "Encrypted code: " + encryptedBombCode;
+  encryptedCode.className = "text";
+  const encryption = document.createElement("div");
+  encryption.innerHTML = "Encryption type: -" + shift;
+  encryption.className = "text";
   const text = document.createElement("div");
   text.innerHTML = "Enter deactivation code:";
   text.className = "text";
@@ -135,6 +149,8 @@ function game1() {
   });
 
   center.innerHTML = "";
+  center.appendChild(encryptedCode);
+  center.appendChild(encryption);
   center.appendChild(text);
   center.appendChild(codeInput);
   center.appendChild(submitButton);
