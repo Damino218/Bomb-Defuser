@@ -134,15 +134,7 @@ function game1() {
 
         let hintMessage =
           "Incorrect code! Try again. Remaining attempts: " +
-          (3 - attempts) +
-          " prób.";
-
-        for (let i = 0; i < enteredCodeArray.length; i++) {
-          if (enteredCodeArray[i] === bombCodeArray[i]) {
-            hintMessage += "Number on position: " + (i + 1) + " is correct.";
-          }
-        }
-
+          (3 - attempts);
         showResultMessage(hintMessage, false);
       }
     }
